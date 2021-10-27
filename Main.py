@@ -360,3 +360,78 @@ def decryption3d(word, key):
     print("\n\n**************************************************")
     print(f'Your decrypted text: {decryp_text}')
     print("******************************************************")
+
+def decryption4d(word, key):
+
+    while len(word) % 4 != 0:
+        word += " "
+
+    row = 4
+    col = int(len(word) / 4)
+    word4d = np.zeros((row, col), dtype=int)
+    key4d = np.zeros((4, 4), dtype=int)
+    ikey4d = np.zeros((4, 4), dtype=int)
+    itr1 = 0
+    itr2 = 0
+
+    for i in range(0, col):
+        for j in range(0, row):
+            word4d[j][i] = alpha_mapping.get(word[itr1])
+            itr1 += 1
+
+    for i in range(0, 4):
+        for j in range(0, 4):
+            key4d[j][i] = alpha_mapping.get(key[itr2])
+            itr2 += 1
+
+    mul_inv = mulinv(key4d)
+
+    while mul_inv == -1:
+        print("Invalid key")
+        print("Key must only consist of 16 characters and all must be alphabets")
+        key = input("Enter your key again: ").upper()
+        while not key.isalpha() or len(key) > 16 or len(key) < 16:
+            if ' ' in key and not any(str.isdigit(c) for c in key):
+                break
+            else:
+                print("Key must only consist of 16 characters and all must be alphabets")
+                key = input("Re-enter key: ").upper()
+        key4d = np.zeros((4, 4), dtype=int)
+        itr2 = 0
+        for i in range(0, 4):
+            for j in range(0, 4):
+                key4d[j][i] = alpha_mapping.get(key[itr2])
+                itr2 += 1
+        mul_inv = mulinv(key4d)
+
+    ikey4d[0][0] = key4d[1][1] * ((key4d[2][2] * key4d[3][3]) - (key4d[3][2] * key4d[2][3])) - key4d[1][2] * ((key4d[2][1] * key4d[3][3]) - (key4d[3][1] * key4d[2][3])) + key4d[1][3] * ((key4d[2][1] * key4d[3][2]) - (key4d[3][1] * key4d[2][2]))
+    ikey4d[0][1] = -(key4d[1][0] * ((key4d[2][2] * key4d[3][3]) - (key4d[3][2] * key4d[2][3])) - key4d[1][2] * ((key4d[2][0] * key4d[3][3]) - (key4d[3][0] * key4d[2][3])) + key4d[1][3] * ((key4d[2][0] * key4d[3][2]) - (key4d[3][0] * key4d[2][2])))
+    ikey4d[0][2] = key4d[1][0] * ((key4d[2][1] * key4d[3][3]) - (key4d[3][1] * key4d[2][3])) - key4d[1][1] * ((key4d[2][0] * key4d[3][3]) - (key4d[3][0] * key4d[2][3])) + key4d[1][3] * ((key4d[2][0] * key4d[3][1]) - (key4d[3][0] * key4d[2][1]))
+    ikey4d[0][3] = -(key4d[1][0] * ((key4d[2][1] * key4d[3][2]) - (key4d[3][1] * key4d[2][2])) - key4d[1][1] * ((key4d[2][0] * key4d[3][2]) - (key4d[3][0] * key4d[2][2])) + key4d[1][2] * ((key4d[2][0] * key4d[3][1]) - (key4d[3][0] * key4d[2][1])))
+    ikey4d[1][0] = -(key4d[0][1] * ((key4d[2][2] * key4d[3][3]) - (key4d[3][2] * key4d[2][3])) - key4d[0][2] * ((key4d[2][1] * key4d[3][3]) - (key4d[3][1] * key4d[2][3])) + key4d[0][3] * ((key4d[2][1] * key4d[3][2]) - (key4d[3][1] * key4d[2][2])))
+    ikey4d[1][1] = key4d[0][0] * ((key4d[2][2] * key4d[3][3]) - (key4d[3][2] * key4d[2][3])) - key4d[0][2] * ((key4d[2][0] * key4d[3][3]) - (key4d[3][0] * key4d[2][3])) + key4d[0][3] * ((key4d[2][0] * key4d[3][2]) - (key4d[3][0] * key4d[2][2]))
+    ikey4d[1][2] = -(key4d[0][0] * ((key4d[2][1] * key4d[3][3]) - (key4d[3][1] * key4d[2][3])) - key4d[0][1] * ((key4d[2][0] * key4d[3][3]) - (key4d[3][0] * key4d[2][3])) + key4d[0][3] * ((key4d[2][0] * key4d[3][1]) - (key4d[3][0] * key4d[2][1])))
+    ikey4d[1][3] = key4d[0][0] * ((key4d[2][1] * key4d[3][2]) - (key4d[3][1] * key4d[2][2])) - key4d[0][1] * ((key4d[2][0] * key4d[3][2]) - (key4d[3][0] * key4d[2][2])) + key4d[0][2] * ((key4d[2][0] * key4d[3][1]) - (key4d[3][0] * key4d[2][1]))
+    ikey4d[2][0] = key4d[0][1] * ((key4d[1][2] * key4d[3][3]) - (key4d[3][2] * key4d[1][3])) - key4d[0][2] * ((key4d[1][1] * key4d[3][3]) - (key4d[3][1] * key4d[1][3])) + key4d[0][3] * ((key4d[1][1] * key4d[3][2]) - (key4d[3][1] * key4d[1][2]))
+    ikey4d[2][1] = -(key4d[0][0] * ((key4d[1][2] * key4d[3][3]) - (key4d[3][2] * key4d[1][3])) - key4d[0][2] * ((key4d[1][0] * key4d[3][3]) - (key4d[3][0] * key4d[1][3])) + key4d[0][3] * ((key4d[1][0] * key4d[3][2]) - (key4d[3][0] * key4d[1][2])))
+    ikey4d[2][2] = key4d[0][0] * ((key4d[1][1] * key4d[3][3]) - (key4d[3][1] * key4d[1][3])) - key4d[0][1] * ((key4d[1][0] * key4d[3][3]) - (key4d[3][0] * key4d[1][3])) + key4d[0][3] * ((key4d[1][0] * key4d[3][1]) - (key4d[3][0] * key4d[1][1]))
+    ikey4d[2][3] = -(key4d[0][0] * ((key4d[1][1] * key4d[3][2]) - (key4d[3][1] * key4d[1][2])) - key4d[0][1] * ((key4d[1][0] * key4d[3][2]) - (key4d[3][0] * key4d[1][2])) + key4d[0][2] * ((key4d[1][0] * key4d[3][1]) - (key4d[3][0] * key4d[1][1])))
+    ikey4d[3][0] = -(key4d[0][1] * ((key4d[1][2] * key4d[2][3]) - (key4d[2][2] * key4d[1][3])) - key4d[0][2] * ((key4d[1][1] * key4d[2][3]) - (key4d[2][1] * key4d[1][3])) + key4d[0][3] * ((key4d[1][1] * key4d[2][2]) - (key4d[2][1] * key4d[1][2])))
+    ikey4d[3][1] = key4d[0][0] * ((key4d[1][2] * key4d[2][3]) - (key4d[2][2] * key4d[1][3])) - key4d[0][2] * ((key4d[1][0] * key4d[2][3]) - (key4d[2][0] * key4d[1][3])) + key4d[0][3] * ((key4d[1][0] * key4d[2][2]) - (key4d[2][0] * key4d[1][2]))
+    ikey4d[3][2] = -(key4d[0][0] * ((key4d[1][1] * key4d[2][3]) - (key4d[2][1] * key4d[1][3])) - key4d[0][1] * ((key4d[1][0] * key4d[2][3]) - (key4d[2][0] * key4d[1][3])) + key4d[0][3] * ((key4d[1][0] * key4d[2][1]) - (key4d[2][0] * key4d[1][1])))
+    ikey4d[3][3] = key4d[0][0] * ((key4d[1][1] * key4d[2][2]) - (key4d[2][1] * key4d[1][2])) - key4d[0][1] * ((key4d[1][0] * key4d[2][2]) - (key4d[2][0] * key4d[1][2])) + key4d[0][2] * ((key4d[1][0] * key4d[2][1]) - (key4d[2][0] * key4d[1][1]))
+
+    ikey4d[0][1], ikey4d[0][2], ikey4d[0][3], ikey4d[1][2], ikey4d[1][3], ikey4d[2][3], ikey4d[1][0], ikey4d[2][0], ikey4d[3][0], ikey4d[2][1], ikey4d[3][1], ikey4d[3][2] = ikey4d[1][0], ikey4d[2][0], ikey4d[3][0], ikey4d[2][1], ikey4d[3][1], ikey4d[3][2], ikey4d[0][1], ikey4d[0][2], ikey4d[0][3], ikey4d[1][2], ikey4d[1][3], ikey4d[2][3]
+
+    for i in range(0, 4):
+        for j in range(0, 4):
+            ikey4d[j][i] = (ikey4d[j][i] * mul_inv)
+
+    for i in range(0, 4):
+        for j in range(0, 4):
+            ikey4d[j][i] = ikey4d[j][i] % 27
+
+    decryp_text = extraction(word, word4d, ikey4d)
+    print("*********************************************************")
+    print(f'Your decrypted text: {decryp_text}')
+    print("*********************************************************")
