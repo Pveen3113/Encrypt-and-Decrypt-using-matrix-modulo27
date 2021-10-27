@@ -436,7 +436,7 @@ def decryption4d(word, key):
     print(f'Your decrypted text: {decryp_text}')
     print("*********************************************************")
 
-    while True:
+while True:
         print("\t\t\tWelcome to Data Encryption and Decryption System\n\n")
         print("*****************************************************************************\n")
         print("\tThis system encrypt and decrypt data using invertible matrices Modulo 27\n")
@@ -524,3 +524,81 @@ def decryption4d(word, key):
                     encryption4d(Word, Key)
                 elif choice1 == 4:
                     break
+        elif choice == 2:
+            while True:
+                print("1. Decryption using 2x2 Matrix")
+                print("2. Decryption using 3x3 Matrix")
+                print("3. Decryption using 4x4 Matrix")
+                print("4. Main Menu")
+                while True:
+                    try:
+                        choice1 = int(input("Enter your choice: "))
+                        break
+                    except ValueError:
+                        print("Invalid choice. Try again...")
+                if choice1 == 1:
+                    print("Decryption using 2x2 Matrix")
+                    print("Message must only contain alphabets.")
+                    Word = input("Enter message: ").upper()
+                    while not Word.isalpha():
+                        if ' ' in Word and not any(str.isdigit(c) for c in Word):
+                            break
+                        else:
+                            print("Try again, your message contain numbers or special characters")
+                            print("Message must only contain alphabets.")
+                            Word = input("Re-enter message: ").upper()
+                    print("Key must only consist of 4 characters and all must be alphabets")
+                    Key = input("Enter key: ").upper()
+                    while not Key.isalpha() or len(Key) > 4 or len(Key) < 4:
+                        if ' ' in Key and not any(str.isdigit(c) for c in Key):
+                            break
+                        else:
+                            print("Key must only consist of 4 characters and all must be alphabets")
+                            Key = input("Re-enter key: ").upper()
+                    decryption2d(Word, Key)
+                elif choice1 == 2:
+                    print("Decryption using 3x3 Matrix")
+                    print("Message must only contain alphabets.")
+                    Word = input("Enter message: ").upper()
+                    while not Word.isalpha():
+                        if ' ' in Word and not any(str.isdigit(c) for c in Word):
+                            break
+                        else:
+                            print("Try again, your message contain numbers or special characters")
+                            print("Message must only contain alphabets.")
+                            Word = input("Re-enter message: ").upper()
+                    print("Key must only consist of 9 characters and all must be alphabets")
+                    Key = input("Enter key: ").upper()
+                    while not Key.isalpha() or len(Key) > 9 or len(Key) < 9:
+                        if ' ' in Key and not any(str.isdigit(c) for c in Key):
+                            break
+                        else:
+                            print("Key must only consist of 9 characters and all must be alphabets")
+                            Key = input("Re-enter key: ").upper()
+                    decryption3d(Word, Key)
+                elif choice1 == 3:
+                    print("Decryption using 4x4 Matrix")
+                    print("Message must only contain alphabets.")
+                    Word = input("Enter message: ").upper()
+                    while not Word.isalpha():
+                        if ' ' in Word and not any(str.isdigit(c) for c in Word):
+                            break
+                        else:
+                            print("Try again, your message contain numbers or special characters")
+                            print("Message must only contain alphabets.")
+                            Word = input("Re-enter message: ").upper()
+                    print("Key must only consist of 16 characters and all must be alphabets")
+                    Key = input("Enter key: ").upper()
+                    while not Key.isalpha() or len(Key) > 16 or len(Key) < 16:
+                        if ' ' in Key and not any(str.isdigit(c) for c in Key):
+                            break
+                        else:
+                            print("Key must only consist of 16 characters and all must be alphabets")
+                            Key = input("Re-enter key: ").upper()
+                    decryption4d(Word, Key)
+                elif choice1 == 4:
+                    break
+        elif choice == 3:
+            print("Thank you for using our app")
+            sys.exit()
+
