@@ -136,6 +136,53 @@ def encryption2d(word, key):
 
 
 
+def encryption3d(word, key):
+
+    while len(word) % 3 != 0:
+        word += " "
+
+    row = 3
+    col = int(len(word) / 3)
+    word3d = np.zeros((row, col), dtype=int)
+    key3d = np.zeros((3, 3), dtype=int)
+    itr1 = 0
+    itr2 = 0
+    for i in range(0, col):
+        for j in range(0, row):
+            word3d[j][i] = alpha_mapping.get(word[itr1])
+            itr1 += 1
+
+    for i in range(0, 3):
+        for j in range(0, 3):
+            key3d[j][i] = alpha_mapping.get(key[itr2])
+            itr2 += 1
+
+    mul_inv = mulinv(key3d)
+
+    while mul_inv == -1:
+        print("Invalid key")
+        print("Key must only consist of 9 characters and all must be alphabets")
+        key = input("Enter your key again: ").upper()
+        while not key.isalpha() or len(key) > 9 or len(key) < 9:
+            if ' ' in key and not any(str.isdigit(c) for c in key):
+                break
+            else:
+                print("Key must only consist of 9 characters and all must be alphabets")
+                key = input("Re-enter key: ").upper()
+        key3d = np.zeros((3, 3), dtype=int)
+        itr2 = 0
+        for i in range(0, 3):
+            for j in range(0, 3):
+                key3d[j][i] = alpha_mapping.get(key[itr2])
+                itr2 += 1
+        mul_inv = mulinv(key3d)
+
+    encryp_text = extraction(word, word3d, key3d)
+    print("\n\n***********************************************")
+    print(f'Your encrypted text: {encryp_text}')
+    print("\n\n***********************************************")
+
+
 def decryption2d(word, key):
 
     if len(word) % 2 != 0:
