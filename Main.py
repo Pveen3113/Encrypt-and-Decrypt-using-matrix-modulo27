@@ -244,3 +244,71 @@ def decryption2d(word, key):
     print("\n\n*************************************************")
     print(f'Your decrypted text: {decryp_text}')
     print("*****************************************************")
+
+def decryption3d(word, key):
+
+    while len(word) % 3 != 0:
+        word += " "
+
+    row = 3
+    col = int(len(word) / 3)
+    word3d = np.zeros((row, col), dtype=int)
+    key3d = np.zeros((3, 3), dtype=int)
+    ikey3d = np.zeros((3, 3), dtype=int)
+    itr1 = 0
+    itr2 = 0
+
+    for i in range(0, col):
+        for j in range(0, row):
+            word3d[j][i] = alpha_mapping.get(word[itr1])
+            itr1 += 1
+
+    for i in range(0, 3):
+        for j in range(0, 3):
+            key3d[j][i] = alpha_mapping.get(key[itr2])
+            itr2 += 1
+
+    mul_inv = mulinv(key3d)
+
+    while mul_inv == -1:
+        print("Invalid key")
+        print("Key must only consist of 9 characters and all must be alphabets")
+        key = input("Enter your key again: ").upper()
+        while not key.isalpha() or len(key) > 9 or len(key) < 9:
+            if ' ' in key and not any(str.isdigit(c) for c in key):
+                break
+            else:
+                print("Key must only consist of 9 characters and all must be alphabets")
+                key = input("Re-enter key: ").upper()
+        key3d = np.zeros((3, 3), dtype=int)
+        itr2 = 0
+        for i in range(0, 3):
+            for j in range(0, 3):
+                key3d[j][i] = alpha_mapping.get(key[itr2])
+                itr2 += 1
+        mul_inv = mulinv(key3d)
+
+    key3d[0][1], key3d[0][2], key3d[2][1], key3d[1][0], key3d[2][0], key3d[1][2] = key3d[1][0], key3d[2][0], key3d[1][2], key3d[0][1], key3d[0][2], key3d[2][1]
+
+    ikey3d[0][0] = (key3d[1][1] * key3d[2][2] - key3d[2][1] * key3d[1][2])
+    ikey3d[0][1] = -(key3d[1][0] * key3d[2][2] - key3d[2][0] * key3d[1][2])
+    ikey3d[0][2] = (key3d[1][0] * key3d[2][1] - key3d[2][0] * key3d[1][1])
+    ikey3d[1][0] = -(key3d[0][1] * key3d[2][2] - key3d[2][1] * key3d[0][2])
+    ikey3d[1][1] = (key3d[0][0] * key3d[2][2] - key3d[2][0] * key3d[0][2])
+    ikey3d[1][2] = -(key3d[0][0] * key3d[2][1] - key3d[2][0] * key3d[0][1])
+    ikey3d[2][0] = (key3d[0][1] * key3d[1][2] - key3d[1][1] * key3d[0][2])
+    ikey3d[2][1] = -(key3d[0][0] * key3d[1][2] - key3d[1][0] * key3d[0][2])
+    ikey3d[2][2] = (key3d[0][0] * key3d[1][1] - key3d[1][0] * key3d[0][1])
+
+    for i in range(0, 3):
+        for j in range(0, 3):
+            ikey3d[j][i] = (ikey3d[j][i] * mul_inv)
+
+    for i in range(0, 3):
+        for j in range(0, 3):
+            ikey3d[j][i] = ikey3d[j][i] % 27
+
+    decryp_text = extraction(word, word3d, ikey3d)
+    print("\n\n**************************************************")
+    print(f'Your decrypted text: {decryp_text}')
+    print("******************************************************")
