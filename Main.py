@@ -86,3 +86,51 @@ def extraction(word, wordmat, key):
             text += digits_mapping.get(temp4)
 
     return text
+
+def encryption2d(word, key):
+
+    if len(word) % 2 != 0:
+        word += " "
+
+    row = 2
+    col = int(len(word) / 2)
+    word2d = np.zeros((row, col), dtype=int)
+    key2d = np.zeros((2, 2), dtype=int)
+    itr1 = 0
+    itr2 = 0
+
+    for i in range(0, col):
+        for j in range(0, row):
+            word2d[j][i] = alpha_mapping.get(word[itr1])
+            itr1 += 1
+
+    for i in range(0, 2):
+        for j in range(0, 2):
+            key2d[j][i] = alpha_mapping.get(key[itr2])
+            itr2 += 1
+
+    mul_inv = mulinv(key2d)
+
+    while mul_inv == -1:
+        print("Invalid key")
+        print("Key must only consist of 4 characters and all must be alphabets")
+        key = input("Enter your key again: ").upper()
+        while not key.isalpha() or len(key) > 4 or len(key) < 4:
+            if ' ' in key and not any(str.isdigit(c) for c in key):
+                break
+            else:
+                print("Key must only consist of 4 characters and all must be alphabets")
+                key = input("Re-enter key: ").upper()
+        key2d = np.zeros((2, 2), dtype=int)
+        itr2 = 0
+        for i in range(0, 2):
+            for j in range(0, 2):
+                key2d[j][i] = alpha_mapping.get(key[itr2])
+                itr2 += 1
+        mul_inv = mulinv(key2d)
+
+    encryp_text = extraction(word, word2d, key2d)
+    print("\n\n********************************************")
+    print(f'Your encrypted text: {encryp_text}')
+    print("\n\n********************************************")
+
